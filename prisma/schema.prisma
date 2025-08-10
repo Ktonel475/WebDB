@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  department String?
+  role      String?
+  createdAt DateTime @default(now())
+
+  paperAuthors  PaperAuthor[]
+  projects      Project[]
+}
+
+model Paper {
+  id        Int       @id @default(autoincrement())
+  title     String
+  abstract  String?
+  status    String    @default("draft")
+  date      DateTime?
+  createdAt DateTime  @default(now())
+
+  authors PaperAuthor[]
+  tags    PaperTag[]
+  files   File[]
+}
+
+model PaperAuthor {
+  id      Int   @id @default(autoincrement())
+  paper   Paper @relation(fields: [paperId], references: [id])
+  paperId Int
+  user    User  @relation(fields: [userId], references: [id])
+  userId  Int
+  role    String?
+
+  @@unique([paperId, userId])
+}
+
+model Tag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  paperTags   PaperTag[]
+  projectTags ProjectTag[]
+}
+
+model PaperTag {
+  paper   Paper @relation(fields: [paperId], references: [id])
+  paperId Int
+  tag     Tag   @relation(fields: [tagId], references: [id])
+  tagId   Int
+
+  @@id([paperId, tagId])
+}
+
+model File {
+  id        Int      @id @default(autoincrement())
+  filename  String
+  url       String 
+  mime      String?
+  size      Int?
+  createdAt DateTime @default(now())
+
+  paperId Int?
+  paper   Paper? @relation(fields: [paperId], references: [id])
+  projectId Int?
+  project   Project? @relation(fields: [projectId], references: [id])
+}
+
+model Project {
+  id        Int      @id @default(autoincrement())
+  title     String
+  summary   String?
+  startDate DateTime?
+  endDate   DateTime?
+  createdAt DateTime @default(now())
+
+  ownerId Int?
+  owner   User? @relation(fields: [ownerId], references: [id])
+
+  events Event[]
+  media  Media[]
+  tags   ProjectTag[]
+  files  File[]
+}
+
+model Event {
+  id        Int      @id @default(autoincrement())
+  title     String
+  description String?
+  eventDate DateTime?
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId Int
+}
+
+model Media {
+  id        Int      @id @default(autoincrement())
+  caption   String?
+  url       String
+  mime      String?
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  createdAt DateTime @default(now())
+}
+
+model ProjectTag {
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  tag       Tag     @relation(fields: [tagId], references: [id])
+  tagId     Int
+
+  @@id([projectId, tagId])
+}
