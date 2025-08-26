@@ -1,4 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient, Role } = require("@prisma/client");
+const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 
 const papersExample = [
@@ -52,17 +53,17 @@ const papersExample = [
   },
 ];
 
-// Departments + roles for authors
+// Departments + academic positions
 const authorDetails = {
-  Alice: { role: "author", department: "Quantum Computing Lab" },
-  Bob: { role: "researcher", department: "Computer Science Dept." },
-  Charlie: { role: "author", department: "Healthcare AI Center" },
-  Dave: { role: "author", department: "Blockchain Institute" },
-  Eve: { role: "co-author", department: "Cybersecurity Research Lab" },
-  Frank: { role: "author", department: "Computer Vision Group" },
-  Grace: { role: "author", department: "NLP Research Unit" },
-  Heidi: { role: "co-author", department: "AI Language Institute" },
-  Ivan: { role: "author", department: "Cybersecurity Division" },
+  Alice: { position: "author", department: "Quantum Computing Lab" },
+  Bob: { position: "researcher", department: "Computer Science Dept." },
+  Charlie: { position: "author", department: "Healthcare AI Center" },
+  Dave: { position: "author", department: "Blockchain Institute" },
+  Eve: { position: "co-author", department: "Cybersecurity Research Lab" },
+  Frank: { position: "author", department: "Computer Vision Group" },
+  Grace: { position: "author", department: "NLP Research Unit" },
+  Heidi: { position: "co-author", department: "AI Language Institute" },
+  Ivan: { position: "author", department: "Cybersecurity Division" },
 };
 
 async function main() {
@@ -77,36 +78,25 @@ async function main() {
   await prisma.paper.deleteMany();
   await prisma.user.deleteMany();
   await prisma.tag.deleteMany();
-  await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "Event" RESTART IDENTITY CASCADE;`
-  );
-  await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "Media" RESTART IDENTITY CASCADE;`
-  );
-  await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "File" RESTART IDENTITY CASCADE;`
-  );
-  await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "PaperAuthor" RESTART IDENTITY CASCADE;`
-  );
-  await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "PaperTag" RESTART IDENTITY CASCADE;`
-  );
-  await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "ProjectTag" RESTART IDENTITY CASCADE;`
-  );
-  await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "Project" RESTART IDENTITY CASCADE;`
-  );
-  await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "Paper" RESTART IDENTITY CASCADE;`
-  );
-  await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "User" RESTART IDENTITY CASCADE;`
-  );
-  await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "Tag" RESTART IDENTITY CASCADE;`
-  );
+
+  // Reset sequences
+  const tables = [
+    "Event",
+    "Media",
+    "File",
+    "PaperAuthor",
+    "PaperTag",
+    "ProjectTag",
+    "Project",
+    "Paper",
+    "User",
+    "Tag",
+  ];
+  for (const table of tables) {
+    await prisma.$executeRawUnsafe(
+      `TRUNCATE TABLE "${table}" RESTART IDENTITY CASCADE;`
+    );
+  }
 
   // Create Tags
   const uniqueTags = [...new Set(papersExample.flatMap((p) => p.tags))];
@@ -115,14 +105,17 @@ async function main() {
     tagRecords[tag] = await prisma.tag.create({ data: { name: tag } });
   }
 
-  // Create Users
+  // Default password
+  const defaultPassword = await bcrypt.hash("password123", 10);
+
+  // Create Users (Alice = ADMIN, rest = USER)
   const uniqueAuthors = [
     ...new Set(papersExample.flatMap((p) => p.authors.map((a) => a.name))),
   ];
   const authorRecords = {};
   for (const author of uniqueAuthors) {
     const details = authorDetails[author] || {
-      role: "author",
+      position: "author",
       department: "Independent",
     };
     const email = `${author.toLowerCase()}@example.com`;
@@ -130,7 +123,9 @@ async function main() {
       data: {
         name: author,
         email,
-        role: details.role,
+        passwordHash: defaultPassword,
+        role: author === "Alice" ? Role.ADMIN : Role.USER, // ✅ only Alice is ADMIN
+        position: details.position, // academic role
         department: details.department,
       },
     });
@@ -221,7 +216,7 @@ async function main() {
     },
   });
 
-  console.log("Seeding complete! Project created:", project.title);
+  console.log("✅ Seeding complete! Project created:", project.title);
 }
 
 main()

@@ -7,16 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  department String?
-  role      String?
-  createdAt DateTime @default(now())
+enum Role {
+  USER
+  ADMIN
+}
 
-  paperAuthors  PaperAuthor[]
-  projects      Project[]
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  passwordHash String    @default("CHANGEME")
+  name         String?
+  department   String?
+  role         Role      @default(USER)
+  position     String?
+  createdAt    DateTime  @default(now())
+  lastLogin    DateTime?
+
+  paperAuthors PaperAuthor[]
+  projects     Project[]
 }
 
 model Paper {
@@ -44,9 +52,9 @@ model PaperAuthor {
 }
 
 model Tag {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-  paperTags   PaperTag[]
+  id         Int    @id @default(autoincrement())
+  name       String @unique
+  paperTags  PaperTag[]
   projectTags ProjectTag[]
 }
 
@@ -67,8 +75,8 @@ model File {
   size      Int?
   createdAt DateTime @default(now())
 
-  paperId Int?
-  paper   Paper? @relation(fields: [paperId], references: [id])
+  paperId   Int?
+  paper     Paper?   @relation(fields: [paperId], references: [id])
   projectId Int?
   project   Project? @relation(fields: [projectId], references: [id])
 }
@@ -91,12 +99,12 @@ model Project {
 }
 
 model Event {
-  id        Int      @id @default(autoincrement())
-  title     String
+  id          Int      @id @default(autoincrement())
+  title       String
   description String?
-  eventDate DateTime?
-  project   Project  @relation(fields: [projectId], references: [id])
-  projectId Int
+  eventDate   DateTime?
+  project     Project  @relation(fields: [projectId], references: [id])
+  projectId   Int
 }
 
 model Media {
