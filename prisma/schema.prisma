@@ -21,7 +21,6 @@ model User {
   role         Role      @default(USER)
   position     String?
   createdAt    DateTime  @default(now())
-  lastLogin    DateTime?
 
   paperAuthors PaperAuthor[]
   projects     Project[]
@@ -31,7 +30,6 @@ model Paper {
   id        Int       @id @default(autoincrement())
   title     String
   abstract  String?
-  status    String    @default("draft")
   date      DateTime?
   createdAt DateTime  @default(now())
 

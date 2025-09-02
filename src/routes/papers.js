@@ -21,8 +21,23 @@ router.get("/years", async (req, res) => {
       date: true,
     },
   });
-  const uniqueYears = [...new Set(years.map((paper) => paper.date.getFullYear()))];
+  const uniqueYears = [
+    ...new Set(years.map((paper) => paper.date.getFullYear())),
+  ];
   res.json(uniqueYears);
+});
+
+router.get("/authors", async (req, res) => {
+  const authors = await prisma.user.findMany({
+    select: { id: true, name: true },
+    orderBy: { name: "asc" },
+  });
+  res.json(authors);
+});
+
+router.get("/tags", async (req, res) => {
+  const tags = await prisma.tag.findMany();
+  res.json(tags);
 });
 
 router.get("/search", async (req, res) => {
@@ -57,7 +72,9 @@ router.get("/search", async (req, res) => {
   if (filters.author) {
     where.AND.push({
       authors: {
-        some: { user: { name: { contains: filters.author, mode: "insensitive" } } },
+        some: {
+          user: { name: { contains: filters.author, mode: "insensitive" } },
+        },
       },
     });
   }
@@ -70,9 +87,6 @@ router.get("/search", async (req, res) => {
         lt: end, // less than next year's Jan 1
       },
     });
-    console.log("Year filter applied:", year);
-    console.log("start:", start);
-    console.log("end:", end);
   }
   if (query) {
     where.AND.push({
@@ -91,10 +105,10 @@ router.get("/search", async (req, res) => {
   let orderBy = {};
   switch (sort) {
     case "year_asc":
-      orderBy = { year: "asc" };
+      orderBy = { date: "asc" };
       break;
     case "year_desc":
-      orderBy = { year: "desc" };
+      orderBy = { date: "desc" };
       break;
     case "title_asc":
       orderBy = { title: "asc" };
@@ -123,23 +137,71 @@ router.get("/search", async (req, res) => {
   }
 });
 
-// GET /api/papers/:id
-router.get("/:id", async (req, res) => {
-  const id = Number(req.params.id);
-  const paper = await prisma.paper.findUnique({
-    where: { id },
-    include: {
-      authors: { include: { user: true } },
-      tags: { include: { tag: true } },
-      files: true,
-    },
-  });
-  if (!paper) return res.status(404).json({ error: "Not found" });
-  res.json(paper);
-});
+router
+  .route("/:id")
+  .get(async (req, res) => {
+    const id = Number(req.params.id);
+    const paper = await prisma.paper.findUnique({
+      where: { id },
+      include: {
+        authors: { include: { user: true } },
+        tags: { include: { tag: true } },
+        files: true,
+      },
+    });
+    if (!paper) return res.status(404).json({ error: "Not found" });
+    res.json(paper);
+  })
+  .patch(async (req, res) => {
+    const id = Number(req.params.id);
+    const { title, abstract, date } = req.body;
+    try {
+      const updateData = {};
 
-// POST /api/papers
-// body: { title, abstract, date, authorIds: [1,2], tagNames: ['AI'] }
+      if (title !== undefined) updateData.title = title;
+      if (abstract !== undefined) updateData.abstract = abstract;
+      if (date !== undefined) updateData.date = new Date(date);
+
+      if (authorIds !== undefined) {
+        updateData.authors = {
+          deleteMany: {},
+          create: authorIds.map((uid) => ({
+            user: { connect: { id: uid } },
+          })),
+        };
+      }
+
+      if (tagNames !== undefined) {
+        updateData.tags = {
+          deleteMany: {},
+          create: tagNames.map((name) => ({
+            tag: {
+              connectOrCreate: {
+                where: { name },
+                create: { name },
+              },
+            },
+          })),
+        };
+      }
+
+      const paper = await prisma.paper.update({
+        where: { id },
+        data: updateData,
+        include: {
+          authors: { include: { user: true } },
+          tags: { include: { tag: true } },
+          files: true,
+        },
+      });
+
+      res.json(paper);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Update failed", details: err.message });
+    }
+  });
+
 router.post("/", async (req, res) => {
   const { title, abstract, date, authorIds = [], tagNames = [] } = req.body;
   try {
@@ -168,5 +230,43 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Create failed", details: err.message });
   }
 });
+
+router.post("/user", async (req, res) => {
+  const { name, email, password, department, role, position } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+  }
+
+  if (!password) {
+    return res.status(400).json({ error: "Password is required" });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: {
+        name: name || null,
+        email,
+        passwordHash: hashedPassword,
+        department: department || null,
+        role: role || "USER",
+        position: position || null,
+      },
+    });
+
+    res.status(201).json(user);
+  } catch (err) {
+    console.error(err);
+
+    if (err.code === "P2002") {
+      return res.status(409).json({ error: "Email already exists" });
+    }
+
+    res.status(500).json({ error: "Create failed", details: err.message });
+  }
+});
+
+
 
 module.exports = router;
