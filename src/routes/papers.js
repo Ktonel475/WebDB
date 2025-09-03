@@ -35,6 +35,14 @@ router.get("/authors", async (req, res) => {
   res.json(authors);
 });
 
+router.get("/newID", async (req, res) => {
+  const paper = await prisma.paper.findFirst({
+    orderBy: { id: "desc" },
+  });
+  const newId = paper ? paper.id + 1 : 1;
+  res.json({ id: newId });
+});
+
 router.get("/tags", async (req, res) => {
   const tags = await prisma.tag.findMany();
   res.json(tags);
@@ -267,6 +275,17 @@ router.post("/user", async (req, res) => {
   }
 });
 
-
+router.delete("/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  try {
+    await prisma.paper.delete({
+      where: { id },
+    });
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Delete failed", details: err.message });
+  }
+});
 
 module.exports = router;
