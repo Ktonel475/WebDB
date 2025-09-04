@@ -162,7 +162,8 @@ router
   })
   .patch(async (req, res) => {
     const id = Number(req.params.id);
-    const { title, abstract, date } = req.body;
+    const { title, abstract, date, authorIds, tagNames } = req.body; // ✅ get from frontend
+
     try {
       const updateData = {};
 
@@ -172,7 +173,7 @@ router
 
       if (authorIds !== undefined) {
         updateData.authors = {
-          deleteMany: {},
+          deleteMany: {}, // clear old
           create: authorIds.map((uid) => ({
             user: { connect: { id: uid } },
           })),
@@ -181,7 +182,7 @@ router
 
       if (tagNames !== undefined) {
         updateData.tags = {
-          deleteMany: {},
+          deleteMany: {}, // clear old
           create: tagNames.map((name) => ({
             tag: {
               connectOrCreate: {
