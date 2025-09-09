@@ -1,0 +1,317 @@
+{
+  "users": [
+    {
+      "email": "admin@example.com",
+      "password": "admin123",
+      "name": "Admin User",
+      "department": "Computer Science",
+      "position": "Professor",
+      "role": "ADMIN"
+    },
+    {
+      "email": "jane@example.com",
+      "password": "changeme",
+      "name": "Jane Doe",
+      "department": "Physics",
+      "position": "Researcher",
+      "role": "USER"
+    },
+    {
+      "email": "john@example.com",
+      "password": "john123",
+      "name": "John Smith",
+      "department": "Mathematics",
+      "position": "Lecturer",
+      "role": "USER"
+    },
+    {
+      "email": "alice@example.com",
+      "password": "alice123",
+      "name": "Alice Brown",
+      "department": "Biology",
+      "position": "Postdoc",
+      "role": "USER"
+    }
+  ],
+  "tags": [
+    { "name": "AI" },
+    { "name": "Machine Learning" },
+    { "name": "Quantum Computing" },
+    { "name": "Data Science" },
+    { "name": "Biology" },
+     { "name": "Mathematics" },
+  { "name": "Physics" }
+  ],
+  "projects": [
+    {
+      "title": "Quantum Research Project",
+      "summary": "Exploring quantum algorithms for machine learning.",
+      "startDate": "2024-01-01",
+      "endDate": "2025-01-01",
+      "ownerEmail": "jane@example.com",
+      "tags": ["Machine Learning"]
+    },
+    {
+      "title": "Genome Analysis Project",
+      "summary": "Using AI to analyze genome sequencing data.",
+      "startDate": "2024-03-01",
+      "endDate": "2025-03-01",
+      "ownerEmail": "alice@example.com",
+      "tags": ["Biology", "AI"]
+    },
+    {
+      "title": "Mathematical Modeling Project",
+      "summary": "Developing new mathematical models for physics simulations.",
+      "startDate": "2024-02-01",
+      "endDate": "2025-02-01",
+      "ownerEmail": "john@example.com",
+      "tags": ["Mathematics", "Physics"]
+    }
+  ],
+  "papers": [
+    {
+      "title": "Deep Learning in Quantum Systems",
+      "abstract": "A study combining deep learning techniques with quantum computation.",
+      "date": "2024-06-01",
+      "affiliation": "MIT",
+    "publication": "Nature Physics",
+    "DOI": "10.1234/abcd.5678",
+    "authors": [
+      { "email": "admin@example.com", "role": "Supervisor" },
+      { "email": "jane@example.com", "role": "First Author" }
+    ],
+    "tags": ["AI", "Quantum Computing"],
+    "files": [
+      {
+        "filename": "quantum-paper.pdf",
+        "url": "https://example.com/quantum-paper.pdf",
+        "mime": "application/pdf",
+        "size": 2048000
+      }
+    ]
+  },
+  {
+    "title": "AI in Genomic Research",
+    "abstract": "Applying artificial intelligence techniques to genomic data analysis.",
+    "date": "2024-07-15",
+    "affiliation": "Harvard University",
+    "publication": "Bioinformatics Journal",
+    "DOI": "10.5678/efgh.1234",
+    "authors": [
+      { "email": "alice@example.com", "role": "First Author" }
+    ],
+    "tags": ["AI", "Biology"],
+    "files": [
+      {
+        "filename": "genomics-paper.pdf",
+        "url": "https://example.com/genomics-paper.pdf",
+        "mime": "application/pdf",
+        "size": 3072000
+      }
+    ]
+  },
+  {
+    "title": "Machine Learning for Physics Simulations",
+    "abstract": "Exploring ML techniques to optimize physics-based simulations.",
+    "date": "2024-05-10",
+    "affiliation": "Stanford University",
+    "publication": "Journal of Computational Physics",
+    "DOI": "10.9876/mlphysics.001",
+    "authors": [
+      { "email": "john@example.com", "role": "Lead Author" }
+    ],
+    "tags": ["Machine Learning", "Physics"],
+    "files": [
+      {
+        "filename": "ml-physics.pdf",
+        "url": "https://example.com/ml-physics.pdf",
+        "mime": "application/pdf",
+        "size": 2500000
+      }
+    ]
+  },
+  {
+    "title": "Quantum Algorithms for AI",
+    "abstract": "Investigating how quantum algorithms can enhance AI computations.",
+    "date": "2024-08-20",
+    "affiliation": "Caltech",
+    "publication": "Quantum Computing Today",
+    "DOI": "10.2468/quantumai.002",
+    "authors": [
+      { "email": "admin@example.com", "role": "Supervisor" },
+      { "email": "john@example.com", "role": "Researcher" }
+    ],
+    "tags": ["AI", "Quantum Computing"],
+    "files": [
+      {
+        "filename": "quantum-ai.pdf",
+        "url": "https://example.com/quantum-ai.pdf",
+        "mime": "application/pdf",
+        "size": 1800000
+      }
+    ]
+  },
+  {
+    "title": "Genome Sequencing Analysis Using AI",
+    "abstract": "AI-driven tools for large-scale genome sequencing analysis.",
+    "date": "2024-03-30",
+    "affiliation": "Oxford University",
+    "publication": "Genomics Today",
+    "DOI": "10.1357/genomeai.003",
+    "authors": [
+      { "email": "alice@example.com", "role": "Lead Author" }
+    ],
+    "tags": ["AI", "Biology"],
+    "files": [
+      {
+        "filename": "genome-ai.pdf",
+        "url": "https://example.com/genome-ai.pdf",
+        "mime": "application/pdf",
+        "size": 3200000
+      }
+    ]
+  },
+  {
+    "title": "Advanced Data Science Methods",
+    "abstract": "Modern data science techniques applied across multiple domains.",
+    "date": "2024-02-15",
+    "affiliation": "ETH Zurich",
+    "publication": "Data Science Journal",
+    "DOI": "10.1122/datasci.004",
+    "authors": [
+      { "email": "jane@example.com", "role": "Lead Author" }
+    ],
+    "tags": ["Data Science", "AI"],
+    "files": [
+      {
+        "filename": "data-science.pdf",
+        "url": "https://example.com/data-science.pdf",
+        "mime": "application/pdf",
+        "size": 2000000
+      }
+    ]
+  },
+  {
+    "title": "Mathematical Modeling of Biological Systems",
+    "abstract": "Using mathematical models to simulate complex biological processes.",
+    "date": "2024-04-10",
+    "affiliation": "University of Tokyo",
+    "publication": "Journal of Mathematical Biology",
+    "DOI": "10.3344/mathbio.005",
+    "authors": [
+      { "email": "john@example.com", "role": "Lead Author" },
+      { "email": "alice@example.com", "role": "Co-Author" }
+    ],
+    "tags": ["Biology", "Mathematics"],
+    "files": [
+      {
+        "filename": "math-bio.pdf",
+        "url": "https://example.com/math-bio.pdf",
+        "mime": "application/pdf",
+        "size": 2800000
+      }
+    ]
+  },
+  {
+    "title": "AI Applications in Physics Experiments",
+    "abstract": "Leveraging AI for automating complex physics experiments.",
+    "date": "2024-09-05",
+    "affiliation": "MIT",
+    "publication": "Physics Today",
+    "DOI": "10.5566/aiphysics.006",
+    "authors": [
+      { "email": "john@example.com", "role": "Lead Author" }
+    ],
+    "tags": ["AI", "Physics"],
+    "files": [
+      {
+        "filename": "ai-physics.pdf",
+        "url": "https://example.com/ai-physics.pdf",
+        "mime": "application/pdf",
+        "size": 2100000
+      }
+    ]
+  },
+  {
+    "title": "Quantum Machine Learning Models",
+    "abstract": "Combining quantum computing and ML for new model architectures.",
+    "date": "2024-10-12",
+    "affiliation": "Harvard University",
+    "publication": "Quantum AI Journal",
+    "DOI": "10.7788/qml.007",
+    "authors": [
+      { "email": "admin@example.com", "role": "Supervisor" },
+      { "email": "jane@example.com", "role": "Researcher" }
+    ],
+    "tags": ["AI", "Quantum Computing", "Machine Learning"],
+    "files": [
+      {
+        "filename": "qml.pdf",
+        "url": "https://example.com/qml.pdf",
+        "mime": "application/pdf",
+        "size": 2300000
+      }
+    ]
+  },
+  {
+    "title": "Data Science in Genomics",
+    "abstract": "Integration of large-scale genomic datasets using advanced data science techniques.",
+    "date": "2024-11-01",
+    "affiliation": "Cambridge University",
+    "publication": "Journal of Computational Biology",
+    "DOI": "10.8899/datasci-genomics.008",
+    "authors": [
+      { "email": "alice@example.com", "role": "Lead Author" }
+    ],
+    "tags": ["Data Science", "Biology"],
+    "files": [
+      {
+        "filename": "datasci-genomics.pdf",
+        "url": "https://example.com/datasci-genomics.pdf",
+        "mime": "application/pdf",
+        "size": 2900000
+      }
+    ]
+  }
+],
+  "events": [
+    {
+      "title": "Kickoff Meeting",
+      "description": "Initial meeting for project discussion",
+      "eventDate": "2024-01-05",
+      "projectTitle": "Quantum Research Project"
+    },
+    {
+      "title": "Genome Workshop",
+      "description": "Workshop to discuss genome sequencing methods",
+      "eventDate": "2024-03-15",
+      "projectTitle": "Genome Analysis Project"
+    },
+    {
+      "title": "Math Modeling Seminar",
+      "description": "Seminar on advanced mathematical models",
+      "eventDate": "2024-02-20",
+      "projectTitle": "Mathematical Modeling Project"
+    }
+  ],
+  "media": [
+    {
+      "caption": "Project presentation slides",
+      "url": "https://example.com/slides.pdf",
+      "mime": "application/pdf",
+      "projectTitle": "Quantum Research Project"
+    },
+    {
+      "caption": "Genome workshop photos",
+      "url": "https://example.com/genome-workshop.jpg",
+      "mime": "image/jpeg",
+      "projectTitle": "Genome Analysis Project"
+    },
+    {
+      "caption": "Math seminar recording",
+      "url": "https://example.com/math-seminar.mp4",
+      "mime": "video/mp4",
+      "projectTitle": "Mathematical Modeling Project"
+    }
+  ]
+}

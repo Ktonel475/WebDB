@@ -31,6 +31,9 @@ model Paper {
   title     String
   abstract  String?
   date      DateTime?
+  affiliation String?
+  publication String? 
+  DOI       String?
   createdAt DateTime  @default(now())
 
   authors PaperAuthor[]
